@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+P﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,16 +85,15 @@ namespace trenApi.Controllers
             {
                 List<YerlesimAyrinti> yerlesimAyrintilari = new List<YerlesimAyrinti>();
                 int kisiSayisi = input.RezervasyonYapilacakKisiSayisi;
-                int ilkKisiSayisi = input.RezervasyonYapilacakKisiSayisi;
+                int kalanKisiSayisi = 0;
                 foreach (var Vagon in KapasiteliVagonlar)
                 {
-
-
+                    kalanKisiSayisi = Math.Abs((Vagon.Kapasite - Vagon.DoluKoltukAdet) - kisiSayisi);
                     YerlesimAyrinti yerlesimAyrintisi = new YerlesimAyrinti() { 
                         VagonAdi = Vagon.Ad,
-                        KisiSayisi = Math.Abs((Vagon.Kapasite - Vagon.DoluKoltukAdet)) < kisiSayisi ? Math.Abs((Vagon.Kapasite - Vagon.DoluKoltukAdet) - kisiSayisi) : kisiSayisi
+                        KisiSayisi = Math.Abs(kalanKisiSayisi-kisiSayisi)
                     };
-                    kisiSayisi -= Math.Abs((Vagon.Kapasite - Vagon.DoluKoltukAdet) - kisiSayisi);
+                    
                     yerlesimAyrintilari.Add(yerlesimAyrintisi);
                 }
 
