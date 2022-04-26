@@ -84,40 +84,25 @@ namespace trenApi.Controllers
             if (KapasiteliVagonlar.Count > 0 && KapasiteliVagonlar.Select(x=>x.Kapasite-x.DoluKoltukAdet).Sum() >= input.RezervasyonYapilacakKisiSayisi && input.KisilerFarkliVagonlaraYerlestirilebilir == true)
             {
                 List<YerlesimAyrinti> yerlesimAyrintilari = new List<YerlesimAyrinti>();
+
                 int kisiSayisi = input.RezervasyonYapilacakKisiSayisi;
 
-                foreach (var Vagon in KapasiteliVagonlar)
+                foreach (Vagon Vagon in KapasiteliVagonlar)
                 {
-
-                    var Kapasite = Vagon.Kapasite - Vagon.DoluKoltukAdet;
-
-                    if(kisiSayisi >= Kapasite)
+                    int Kapasite = Vagon.Kapasite - Vagon.DoluKoltukAdet;
+               
+                    YerlesimAyrinti yerlesimAyrintisi = new YerlesimAyrinti()
                     {
-                        YerlesimAyrinti yerlesimAyrintisi = new YerlesimAyrinti()
-                        {
-                            VagonAdi = Vagon.Ad,
-                            KisiSayisi = Math.Abs(Kapasite)
-                        };
-                        yerlesimAyrintilari.Add(yerlesimAyrintisi);
-                    }
-                    else
-                    {
-                        YerlesimAyrinti yerlesimAyrintisi = new YerlesimAyrinti()
-                        {
-                            VagonAdi = Vagon.Ad,
-                            KisiSayisi = kisiSayisi
-                        };
-                        yerlesimAyrintilari.Add(yerlesimAyrintisi);
-                    }
-                       
+                        VagonAdi = Vagon.Ad,
+                        KisiSayisi = kisiSayisi >= Kapasite ? Math.Abs(Kapasite) : kisiSayisi
+                    };
+                    yerlesimAyrintilari.Add(yerlesimAyrintisi);
 
                     kisiSayisi -= Kapasite;
 
                     if (kisiSayisi <= 0)
                         break;
-                   
                 }
-
 
                 return Ok(
                         new Output()
